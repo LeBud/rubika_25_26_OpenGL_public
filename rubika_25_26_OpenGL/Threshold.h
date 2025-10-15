@@ -6,4 +6,5 @@ namespace threshold
 	void update();
 	void draw();
 	void destroy();
+
 }
