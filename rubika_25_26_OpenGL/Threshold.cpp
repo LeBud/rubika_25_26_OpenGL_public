@@ -7,18 +7,24 @@
 
 namespace threshold
 {
-	GLuint VertexArray;
-	GLuint vertexBuffer;
+	GLuint VAO;
+	GLuint VBO;
+	GLuint EBO;
 	GLuint vertexShader;
 	GLuint fragmentShader;
 	GLuint shaderProgram;
 	
+	float vertices[] = {	// rectangle
+		0.5f,  0.5f, 0.0f,  // top right
+		0.5f, -0.5f, 0.0f,  // bottom right
+	   -0.5f, -0.5f, 0.0f,  // bottom left
+	   -0.5f,  0.5f, 0.0f   // top left 
+   };
 	
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		 0.5f, -0.5f, 0.0f,
-		 0.0f,  0.5f, 0.0f
-	};
+	unsigned int indices[] = {
+		0, 1, 3,   // first triangle
+		1, 2, 3    // second triangle
+	};  
 
 	const char* vertexShaderSource = "#version 330 core\n"
 			"in vec3 aPos;\n"
@@ -37,15 +43,24 @@ namespace threshold
 	void init()
 	{
 		//Create the VAO (Vertex Array Object) and Bind
-		glGenVertexArrays(1, &VertexArray);
-		glBindVertexArray(VertexArray);
+		glGenVertexArrays(1, &VAO);
+		glBindVertexArray(VAO);
 
 		//Create the VBO (Vertex Buffer Object) and Bind
-		glGenBuffers(1, &vertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+		glGenBuffers(1, &VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-		//Send Buffer Data to the GPU
+		//Create the EBO (Element Buffer Object) and Bind
+		glGenBuffers(1, &EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		
+		//Send Buffer Data to the GPU - Vertices
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		//Copy our index array in a Element Buffer
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+		//Set the vertex attributes Pointers
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
 		
@@ -57,7 +72,7 @@ namespace threshold
 		glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 		glCompileShader(vertexShader);
 
-		//Check if successfully compile
+		//Check if Vertex Shader successfully compile
 		int success;
 		char infoLog[512];
 		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -104,16 +119,19 @@ namespace threshold
 		glUseProgram(shaderProgram);
 
 		//Bind the VAO i want to draw
-		glBindVertexArray(VertexArray);
+		glBindVertexArray(VAO);
 
-		//Draw the triangle
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//Draw the rectangle
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		glBindVertexArray(0);
 	}
 
 	void destroy()
 	{
-		glDeleteVertexArrays(1, &VertexArray);
-		glDeleteBuffers(1, &vertexBuffer);
+		glDeleteVertexArrays(1, &VAO);
+		glDeleteBuffers(1, &VBO);
+		glDeleteBuffers(1, &EBO);
 		glDeleteProgram(shaderProgram);
 	}
 }
