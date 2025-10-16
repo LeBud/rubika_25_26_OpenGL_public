@@ -14,48 +14,8 @@ Shader::~Shader() {
 
 bool Shader::Init(const char* vertexPath, const char* fragmentPath) {
     //Create the Shaders
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-
-    //Get file
-    std::string vertexCode = LoadVertexShader(vertexPath);
-    char const* vertexCodeChar = vertexCode.c_str();
-    
-    //Compile the Vertex Shader
-    glShaderSource(vertexShader, 1, &vertexCodeChar, NULL);
-    glCompileShader(vertexShader);
-
-    //Check if Vertex Shader successfully compile
-    int success;
-    char infoLog[512];
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-        std::cout << "Vertex shader compilation failed: " << infoLog << std::endl;
-        return false;
-    }
-
-    
-    //Create the Shaders
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    
-    //Get file
-    std::string fragmentCode = LoadFragShader(fragmentPath);
-    char const* fragmentCodeChar = fragmentCode.c_str();
-    
-    //Compile the Frag Shader
-    glShaderSource(fragmentShader, 1, &fragmentCodeChar, NULL);
-    glCompileShader(fragmentShader);
-
-    //Check if Frag Shader successfully compile
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-
-    if (!success) {
-        glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-        std::cout << "Fragment shader compilation failed: " << infoLog << std::endl;
-        return false;
-    }
-    
+    vertexShader = CreateShader(vertexPath, GL_VERTEX_SHADER);
+    fragmentShader = CreateShader(fragmentPath, GL_FRAGMENT_SHADER);
     
     //Create a Program
     ProgramID = glCreateProgram();
@@ -67,6 +27,9 @@ bool Shader::Init(const char* vertexPath, const char* fragmentPath) {
     //Link the shader to the program
     glLinkProgram(ProgramID);
 
+    int success;
+    char infoLog[512];
+    
     //Check if the shader is successfully link to the program
     glGetProgramiv(ProgramID, GL_LINK_STATUS, &success);
     if (!success) {
@@ -82,12 +45,36 @@ bool Shader::Init(const char* vertexPath, const char* fragmentPath) {
     return true;
 }
 
+unsigned int Shader::CreateShader(const char* path, GLenum type) {
+    //Create the Shaders
+    GLuint shader = glCreateShader(type);
+
+    //Get file
+    std::string shaderCode = LoadVertexShader(path);
+    char const* shaderCodeChar = shaderCode.c_str();
+    
+    //Compile the Vertex Shader
+    glShaderSource(shader, 1, &shaderCodeChar, NULL);
+    glCompileShader(shader);
+
+    //Check if Vertex Shader successfully compile
+    int success;
+    char infoLog[512];
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+
+    if (!success) {
+        glGetShaderInfoLog(shader, 512, NULL, infoLog);
+        std::cout << "Vertex shader compilation failed: " << infoLog << std::endl;
+        return -1;
+    }
+
+    return shader;
+}
+
+
 void Shader::Use() {
     //Use the program -- It is used here because we want to use the program only on the current draw
     glUseProgram(ProgramID);
-
-    //Program is modify after it is being use
-    SetFloat("iTime", glfwGetTime());
 }
 
 

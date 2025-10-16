@@ -10,6 +10,8 @@ public:
     // Read both file to init the vertex shader and the fragment shader
     bool Init(const char* vertexPath, const char* fragmentPath);
 
+    unsigned int CreateShader(const char* path, GLenum type);
+    
     // Use the corresponding program
     void Use();
 
@@ -25,7 +27,7 @@ public:
     std::string LoadVertexShader(const char* vertexPath);
     std::string LoadFragShader(const char* fragmentPath);
     
-private:
     GLuint ProgramID;
+private:
     
 };
