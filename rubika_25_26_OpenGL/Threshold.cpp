@@ -137,7 +137,7 @@ namespace threshold
 		if (shaderProgram == nullptr)
 			shaderProgram = new Shader();
 		
-		if (!shaderProgram->Init("./Ressources/default.glslv", "./Ressources/default.glslf")) {
+		if (!shaderProgram->Init("./Shader/default.glslv", "./Shader/default.glslf")) {
 			std::cout << "Failed to initialize the shader program" << std::endl;
 		}
 

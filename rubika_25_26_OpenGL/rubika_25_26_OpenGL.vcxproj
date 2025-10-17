@@ -146,8 +146,8 @@
     <ClInclude Include="Threshold.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Ressources\default.glslf" />
-    <Content Include="Ressources\default.glslv" />
+    <Content Include="Shader\default.glslf" />
+    <Content Include="Shader\default.glslv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

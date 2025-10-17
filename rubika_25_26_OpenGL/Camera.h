@@ -10,7 +10,9 @@ public:
         Forward,
         Backward,
         Right,
-        Left
+        Left,
+        Up,
+        Down
     };
 
     Camera();

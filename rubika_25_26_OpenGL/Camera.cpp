@@ -11,8 +11,8 @@ Camera::Camera(const glm::vec3& pos, const glm::vec3& worldUp, float pitch, floa
     this->Yaw = yaw;
     UpdateCameraRotation();
 
-    MovementSpeed = 10.0f;
-    MouseSensitivity = 1.0f;
+    MovementSpeed = 5.0f;
+    MouseSensitivity = 0.1f;
     Fov = 45.0f;
 }
 
@@ -30,6 +30,10 @@ void Camera::ProcessKeyboard(Direction direction, float deltaTime) {
         Position -= Right * velocity;
     if (direction == Direction::Right)
         Position += Right * velocity;
+    if (direction == Direction::Up)
+        Position += Up * velocity;
+    if (direction == Direction::Down)
+        Position -= Up * velocity;
 }
 
 void Camera::ProcessMouse(float xoffset, float yoffset) {
