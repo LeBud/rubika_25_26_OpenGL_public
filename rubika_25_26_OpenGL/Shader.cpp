@@ -77,7 +77,6 @@ void Shader::Use() {
     glUseProgram(ProgramID);
 }
 
-
 void Shader::SetInt(const std::string& name, int value) const {
     int loc = glGetUniformLocation(ProgramID, name.c_str());
     glUniform1i(loc, value);
@@ -102,6 +101,21 @@ void Shader::SetVec4(const std::string& name, float x, float y, float z, float w
     int loc = glGetUniformLocation(ProgramID, name.c_str());
     glUniform4f(loc, x, y, z, w);
 }
+
+void Shader::MatrixUpdate() {
+    // retrieve the matrix uniform locations
+    unsigned int modelLoc = glGetUniformLocation(ProgramID, "model");
+    unsigned int viewLoc  = glGetUniformLocation(ProgramID, "view");
+    
+    // pass them to the shaders (3 different ways)
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+}
+
+void Shader::SetMat4(const std::string &name, const glm::mat4 &mat) const{
+    glUniformMatrix4fv(glGetUniformLocation(ProgramID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+}
+
 
 std::string Shader::LoadVertexShader(const char* vertexPath) {
     //Open file at path VertexPath
