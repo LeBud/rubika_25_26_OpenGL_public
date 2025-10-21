@@ -18,12 +18,12 @@ Light::Light(const glm::vec3& position, const glm::vec3& ambient, float ambientI
 void Light::Update(float dt) {
     Position = glm::vec3(sin(dt), cos(dt), sin(dt)) * 2.0f;
 
-    glm::vec3 lightColor;
+    /*glm::vec3 lightColor;
     lightColor.x = (float)sin(dt * 2.0);
     lightColor.y = (float)sin(dt * 0.7);
     lightColor.z = (float)sin(dt * 1.3);
     Diffuse = lightColor * glm::vec3(0.5f);
-    Ambient = Diffuse * glm::vec3(0.2f);
+    Ambient = Diffuse * glm::vec3(0.2f);*/
 }
 
 void Light::Use(Shader& shader) {

@@ -2,21 +2,24 @@
 #include <glm/vec3.hpp>
 
 #include "Shader.h"
+#include "Texture.h"
 
 class Material {
 public:
     Material(
-        const glm::vec3& ambient,
-        const glm::vec3& diffuse,
-        const glm::vec3& specular,
+        const char* diffusePath,
+        const char* specularPath,
         float shininess
     );
 
+    void Init();
+    
     void Use(Shader& shader) const;
 
+    Texture* texture;
+
 private:
-    glm::vec3 Ambient;
-    glm::vec3 Diffuse;
-    glm::vec3 Specular;
+    const char* DiffusePath;
+    const char* SpecularPath;
     float Shininess;
 };

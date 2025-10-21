@@ -125,13 +125,13 @@ namespace threshold
 		if (textureProgram == nullptr)
 			textureProgram = new Texture();
 
-		if (!textureProgram->Init("./Ressources/awesomeface.png", 1)) {
+		/*if (!textureProgram->Init("./Ressources/awesomeface.png", 1)) {
 			std::cout << "Failed to initialize the texture program" << std::endl;
 		}
 		
 		if (!textureProgram->Init("./Ressources/container.jpg", 0)) {
 			std::cout << "Failed to initialize the texture program" << std::endl;
-		}
+		}*/
 
 		//Shader class ici
 		if (shaderProgram == nullptr)

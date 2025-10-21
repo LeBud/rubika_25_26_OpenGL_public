@@ -18,79 +18,64 @@ namespace threshold1 {
 
 	Shader* lightShader;
 	Shader* sunShader;
-	Texture* textureProgram;
 	Camera* camera;
-
-	Material* emerald =
-		new Material(glm::vec3(0.0215f, 0.1745f, 0.0215f),
-			glm::vec3(0.07568f,0.61424f,0.07568f),
-			glm::vec3(0.633f,0.727811f,0.633f), 0.6f);
-	
-	Material* brass=
-		new Material(glm::vec3(0.329412, 0.223529, 0.027451),
-			glm::vec3(0.780392,0.568627,0.113725),
-			glm::vec3(0.992157,0.941176,0.807843), 0.21794872f);
-	
-	Material* chrome=
-		new Material(glm::vec3(0.25, 0.25, 0.25),
-			glm::vec3(0.4,0.4,0.4),
-			glm::vec3(0.774597,0.774597,0.774597), 0.6f);
 
 	
 	struct Vertex {
 		float position[3];
 		float normal[3];
+		float texcoord[2];
 	};
 
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-	
+	glm::vec3 lightPos(1.2f, 0.0f, 2.0f);
 	glm::vec3 lightColor = {1.0, 1.0, 1.0};
-	
 	Light* light = new Light(lightPos, lightColor, 0.2f, lightColor, 0.5f, {1.0,1.0,1.0}, 1.0);
+
+	Material* containerTex = new Material("./Ressources/container2_diffuse.png", "./Ressources/container2_specular.png", 32);
 	
-Vertex vertices[] = {	// cube
+	Vertex vertices[] = {	// cube
 		// positions          // colors           // texture coords
-	{ -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
-{  0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
-{  0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
-{  0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
-{ -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
-{ -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f },
+	{ -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f },
+        {  0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f },
+        {  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f },
+        {  0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f },
+        { -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f },
+        { -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f },
 
-{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
-{  0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
-{  0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
-{  0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
-{ -0.5f,  0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
-{ -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f },
+        { -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
+        {  0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f },
+        {  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f },
+        {  0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f },
+        { -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f },
+        { -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f },
 
-{ -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f },
-{ -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f },
-{ -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f },
-{ -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f },
-{ -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f },
-{ -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f },
+        { -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+        { -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f },
+        { -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f },
+        { -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f },
+        { -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+        { -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f },
 
-{ 0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f },
-{ 0.5f,  0.5f, -0.5f, 1.0f,  0.0f,  0.0f },
-{ 0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f },
-{ 0.5f, -0.5f, -0.5f, 1.0f,  0.0f,  0.0f },
-{ 0.5f, -0.5f,  0.5f, 1.0f,  0.0f,  0.0f },
-{ 0.5f,  0.5f,  0.5f, 1.0f,  0.0f,  0.0f },
+         { 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f },
+         { 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f },
+         { 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f },
+         { 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f },
+         { 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f },
+         { 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f },
 
-{ -0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f },
-{  0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f },
-{  0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f },
-{  0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f },
-{ -0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f },
-{ -0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f },
+        { -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f },
+        {  0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f },
+        {  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f },
+        {  0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f },
+        { -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f },
+        { -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f },
 
-{ -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f },
-{  0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f },
-{  0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f },
-{  0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f },
-{ -0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f },
-{ -0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f }
+        { -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f },
+        {  0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f },
+        {  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f },
+        {  0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f },
+        { -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f },
+        { -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f }
    };
 	
 	void init(){
@@ -106,12 +91,16 @@ Vertex vertices[] = {	// cube
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 		//Set the vertex attributes Pointers
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
 		glEnableVertexAttribArray(0);
 
 		//Set the normal attributes Pointers
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+
+		//Set the TexCoords attributes Pointers
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 
 
 		//====Set the VAO for the sun Cube====
@@ -122,14 +111,19 @@ Vertex vertices[] = {	// cube
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-
+		
 		//====Create lightShader (will receive light)====
 		if (lightShader == nullptr)
 			lightShader = new Shader();
 		if (!lightShader->Init("./Shader/material.vert", "./Shader/material.frag"))
 			std::cout << "Failed to initialize the shader program" << std::endl;
+
+		//====Initialise the Material====
+		containerTex->Init();
 		
 		lightShader->Use();
+		lightShader->SetInt("material.diffuse", 0);
+		lightShader->SetInt("material.specular", 1);
 
 		//====Create the SunShader (will only serve the purpose of being a fake sun)====
 		if (sunShader == nullptr)
@@ -159,7 +153,7 @@ Vertex vertices[] = {	// cube
 		light->Use(*lightShader);
 		
 		//Materials properties
-		chrome->Use(*lightShader);
+		containerTex->Use(*lightShader);
 
 		//====Set the projection and View====
 		lightShader->SetMat4("projection", projection);

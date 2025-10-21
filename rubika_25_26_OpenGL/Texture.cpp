@@ -12,21 +12,30 @@ Texture::Texture() {
 Texture::~Texture() {
 }
 
-bool Texture::Init(const char* texturePath, unsigned int textIndex) {
-    if (textIndex == 0) {
-        glGenTextures(1, &texture1);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-    }
-    else if (textIndex == 1) {
-        glGenTextures(1, &texture2);
-        glBindTexture(GL_TEXTURE_2D, texture2);
+bool Texture::Init(const char* diffusePath, const char* specularPath) {
+    glGenTextures(1, &diffuseTex);
+    glBindTexture(GL_TEXTURE_2D, diffuseTex);
+    if (!LoadTexture(diffusePath)) {
+        std::cout << "Failed to load diffuse" << std::endl;
+        return false;
     }
 
+    glGenTextures(1, &specularTex);
+    glBindTexture(GL_TEXTURE_2D, specularTex);
+    if (!LoadTexture(specularPath)) {
+        std::cout << "Failed to load specular" << std::endl;
+        return false;
+    }
+    
+    return true;
+}
+
+bool Texture::LoadTexture(const char* texturePath) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+    
     stbi_set_flip_vertically_on_load(true);
     
     int width, height, channels;
@@ -48,14 +57,12 @@ bool Texture::Init(const char* texturePath, unsigned int textIndex) {
     }
 
     stbi_image_free(data);
-    
-    
     return true;
 }
 
 void Texture::Use() {
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    glBindTexture(GL_TEXTURE_2D, diffuseTex);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2);
+    glBindTexture(GL_TEXTURE_2D, specularTex);
 }
