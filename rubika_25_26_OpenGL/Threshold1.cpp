@@ -6,6 +6,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "Light.h"
+#include "Material.h"
 #include "Shader.h"
 #include "Texture.h"
 namespace threshold1 {
@@ -18,6 +20,22 @@ namespace threshold1 {
 	Shader* sunShader;
 	Texture* textureProgram;
 	Camera* camera;
+
+	Material* emerald =
+		new Material(glm::vec3(0.0215f, 0.1745f, 0.0215f),
+			glm::vec3(0.07568f,0.61424f,0.07568f),
+			glm::vec3(0.633f,0.727811f,0.633f), 0.6f);
+	
+	Material* brass=
+		new Material(glm::vec3(0.329412, 0.223529, 0.027451),
+			glm::vec3(0.780392,0.568627,0.113725),
+			glm::vec3(0.992157,0.941176,0.807843), 0.21794872f);
+	
+	Material* chrome=
+		new Material(glm::vec3(0.25, 0.25, 0.25),
+			glm::vec3(0.4,0.4,0.4),
+			glm::vec3(0.774597,0.774597,0.774597), 0.6f);
+
 	
 	struct Vertex {
 		float position[3];
@@ -25,6 +43,10 @@ namespace threshold1 {
 	};
 
 	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	
+	glm::vec3 lightColor = {1.0, 1.0, 1.0};
+	
+	Light* light = new Light(lightPos, lightColor, 0.2f, lightColor, 0.5f, {1.0,1.0,1.0}, 1.0);
 	
 Vertex vertices[] = {	// cube
 		// positions          // colors           // texture coords
@@ -104,7 +126,7 @@ Vertex vertices[] = {	// cube
 		//====Create lightShader (will receive light)====
 		if (lightShader == nullptr)
 			lightShader = new Shader();
-		if (!lightShader->Init("./Shader/light.vert", "./Shader/light.frag"))
+		if (!lightShader->Init("./Shader/material.vert", "./Shader/material.frag"))
 			std::cout << "Failed to initialize the shader program" << std::endl;
 		
 		lightShader->Use();
@@ -121,29 +143,33 @@ Vertex vertices[] = {	// cube
 	void update(){
 		// useless for now
 		lightPos = glm::vec3(sin((float)glfwGetTime()), cos((float)glfwGetTime()), sin((float)glfwGetTime())) * 2.0f;
+		light->Update((float)glfwGetTime());
 	}
 
 	void draw() {
-		//====Set the projection and View====
+		//====Get the projection and View====
 		glm::mat4 projection = glm::perspective(glm::radians(camera->GetFov()), (float)800 / (float)600, 0.1f, 100.0f);
 		glm::mat4 view = camera->GetMatrix();
-
 		
-		//====Draw object that receive light====
-		
+		//====Use Shader====
 		lightShader->Use();
+
+		//Light properties
+		lightShader->SetVec3("viewPos", camera->GetPosition());
+		light->Use(*lightShader);
+		
+		//Materials properties
+		chrome->Use(*lightShader);
+
+		//====Set the projection and View====
 		lightShader->SetMat4("projection", projection);
 		lightShader->SetMat4("view", view);
-		
-		lightShader->SetVec3("lightPos", lightPos);
-		lightShader->SetVec3("objectColor", 0.1f, 0.26f, 0.7f);
-		lightShader->SetVec3("lightColor", 1.0f, 1.0f, 1.0f);
-		lightShader->SetVec3("viewPos", camera->GetPosition());
-		
+
+		//World Transform
 		glm::mat4 model = glm::mat4(1.0f);
 		lightShader->SetMat4("model", model);
 
-		
+		//Render Cube		
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
