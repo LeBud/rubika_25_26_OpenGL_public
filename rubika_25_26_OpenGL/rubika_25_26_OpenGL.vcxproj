@@ -138,16 +138,22 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Threshold.cpp" />
+    <ClCompile Include="Threshold1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Threshold.h" />
+    <ClInclude Include="Threshold1.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Shader\default.glslf" />
-    <Content Include="Shader\default.glslv" />
+    <Content Include="Shader\default.frag" />
+    <Content Include="Shader\default.vert" />
+    <Content Include="Shader\light.frag" />
+    <Content Include="Shader\light.vert" />
+    <Content Include="Shader\sun.frag" />
+    <Content Include="Shader\sun.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

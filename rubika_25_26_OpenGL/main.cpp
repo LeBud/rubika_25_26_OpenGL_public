@@ -4,8 +4,8 @@
 //#define THRESOLD 0
 
 #ifndef THRESHOLD
-#include "Threshold.h"
-using namespace threshold;
+#include "Threshold1.h"
+using namespace threshold1;
 #endif
 
 #include <iostream>

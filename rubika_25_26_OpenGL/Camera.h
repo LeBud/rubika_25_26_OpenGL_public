@@ -29,6 +29,7 @@ public:
     void ProcessMouse(float xoffset, float yoffset);
     void ProcessMouseScroll(float yoffset);
     float GetFov() const;
+    glm::vec3 GetPosition() const;
     
 private:
     // Compute the Front and Right vector using the euler angles

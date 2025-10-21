@@ -64,6 +64,10 @@ float Camera::GetFov() const {
     return Fov;
 }
 
+glm::vec3 Camera::GetPosition() const {
+    return Position;
+}
+
 void Camera::UpdateCameraRotation() {
     // calculate the new Front vector
     glm::vec3 front;
